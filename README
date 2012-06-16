@@ -1,0 +1,3 @@
+An MVC templating system utlising the PureMVC model.
+
+An authentication system is also included, that ulilises the Session.php Class for checking user authentication against a MySQL database.

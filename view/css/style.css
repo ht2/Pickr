@@ -1,0 +1,51 @@
+body
+{	
+	text-align: center;	
+	background: #FFFFFF url("../images/background.gif") repeat-x;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 75%;
+	color: #333;
+}
+
+/**********************************************TYPOGRAPHY**********************************************/
+
+a:link		{ color: #003366; }
+a:visited	{ color: #003366; }
+a:active	{ color: #003366; }
+a:hover		{ color: #003366; }
+
+textarea{ font-size:100%; font-family:Verdana, Geneva, sans-serif; }
+
+.red,
+.error{
+	color: #990000;
+}
+
+.left{ text-align: left; }
+.center{ text-align: center; }
+.right{ text-align: right; }
+
+.bold{ font-weight:bold;}
+.italic{ font-style:italic;}
+
+.fleft{ float: left;}
+.fright{ float: right;}
+
+#supercontainer{
+	width: 975px;
+	margin: 0 auto;
+	color: #003366;
+	text-align: left;
+}
+
+#header{
+	margin: 10px 0;
+}
+
+#content{
+	margin: 20px 0;
+}
+
+#footer{
+	margin: 10px 0;
+}

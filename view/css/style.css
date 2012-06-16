@@ -8,6 +8,14 @@ body
 }
 
 /**********************************************TYPOGRAPHY**********************************************/
+h1, h2, h3, h4, h5, h6, p{
+    margin: 1em 0;
+}
+
+h1{ font-size: 1.6em; }
+h2{ font-size: 1.4em; }
+h3{ font-size: 1.2em; }
+h4{ font-size: 1.0em; }
 
 a:link		{ color: #003366; }
 a:visited	{ color: #003366; }
@@ -40,6 +48,15 @@ textarea{ font-size:100%; font-family:Verdana, Geneva, sans-serif; }
 
 #header{
 	margin: 10px 0;
+}
+
+#header #logo{
+    float: left;
+    font-size: 1.4em;
+}
+
+#header #userbar{
+    float: right;
 }
 
 #content{

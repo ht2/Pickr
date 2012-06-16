@@ -6,6 +6,8 @@ class MySQL
     var $database;
     var $user;
     var $pass;
+    var $site_name = "Pickr";
+    var $site_root = "Pickr";
     
     public $mysqli;
     var $result;
@@ -20,6 +22,7 @@ class MySQL
                         $this->database = "pickr";
                         $this->user 	= "root";
                         $this->pass 	= "";
+                        $this->site_root = "http://www.pickr.com";
                 break;
         }
 

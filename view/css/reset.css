@@ -46,3 +46,19 @@ del {
 /* tables still need 'cellspacing="0"' in the markup */
 table {
 }
+
+/* For modern browsers */
+.cf:before,
+.cf:after {
+    content:"";
+    display:table;
+}
+
+.cf:after {
+    clear:both;
+}
+
+/* For IE 6/7 (trigger hasLayout) */
+.cf {
+    *zoom:1;
+}

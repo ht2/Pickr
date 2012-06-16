@@ -33,10 +33,8 @@ class TemplateMediator extends Mediator
 				$this->template()->html = $this->template()->tokenize( $notification->getBody(), $this->template()->html ); 
 				
 			break;			
-	 		case ApplicationFacade::RENDER: 
-				
+	 		case ApplicationFacade::RENDER: 	
 				$this->template()->render(); 
-				
 			break;
 	 		default:break;
 	 	}

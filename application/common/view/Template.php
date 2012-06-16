@@ -8,7 +8,7 @@ class Template
 	
 	public function tokenize( $tokens, $template )
 	{
-		if(!$tokens) return;
+		if(sizeof($tokens)==0) return $template;
 		foreach ($tokens as $token => $value) $template = str_replace( $token, $value, $template );
 		return $template;
 	}

@@ -29,6 +29,7 @@ require_once PUREMVC.'patterns/facade/Facade.php';
 
 class SimpleCommand extends Notifier implements ICommand, INotifier 
 {
+    
 	protected $facade;
 	
 	public function __construct()

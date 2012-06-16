@@ -6,12 +6,19 @@ class HomeCommand extends ExtendedSimpleCommand
 		parent::execute( $notification);
 		
 		$this->module = "home";
-		
-		$this->content = "Logged in ".easylink("(logout)", $this->logout_link );
+        
+        switch( $this->command ){
+            default:
+                $this->yourHome();
+                break;
+        }
 		
 		$this->buildPage();
-		
 	}
+
+    public function yourHome() {
+        $this->content = $this->loadTemplate('home/yourhome.html');
+    }
 }
 
 ?>

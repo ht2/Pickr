@@ -16,7 +16,7 @@ class TemplateMediator extends Mediator
 	
 	public function listNotificationInterests()
 	{
-		return array( ApplicationFacade::TEMPLATE, ApplicationFacade::TOKENIZE, ApplicationFacade::RENDER );
+		return array( ApplicationFacade::TEMPLATE, ApplicationFacade::TOKENIZE, ApplicationFacade::RENDER, ApplicationFacade::RENDER_JSON );
 	}
 	
 	public function handleNotification( INotification $notification )
@@ -32,7 +32,12 @@ class TemplateMediator extends Mediator
 			
 				$this->template()->html = $this->template()->tokenize( $notification->getBody(), $this->template()->html ); 
 				
-			break;			
+			break;		
+
+            case ApplicationFacade::RENDER_JSON:
+                $this->template()->renderJSON();
+            break;		
+        
 	 		case ApplicationFacade::RENDER: 	
 				$this->template()->render(); 
 			break;

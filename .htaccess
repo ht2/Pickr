@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteRule ^view - [L,NC]
+RewriteCond $1 !^(index\.php|thumb\.php|images|view|css|robots\.txt)
+
+RewriteRule ^([^/]*)$ /index.php?view=$1 [NC,L]
+RewriteRule ^([^/]*)/([^/]*)$ /index.php?view=$1&command=$2 [NC,L]
+RewriteRule ^([^/]*)/([^/]*)/([^/]*)$ /index.php?view=$1&command=$2&id=$3 [NC,L]

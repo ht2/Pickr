@@ -13,6 +13,7 @@ class StateCommand extends SimpleCommand
 		switch( $view )
 		{
 			default:        $this->facade->sendNotification( ApplicationFacade::VIEW_HOME ); break;		
+			case "ajax":   $this->facade->sendNotification( ApplicationFacade::VIEW_AJAX ); break;		
 			case "login":   $this->facade->sendNotification( ApplicationFacade::VIEW_LOGIN ); break;		
 		}
 	}

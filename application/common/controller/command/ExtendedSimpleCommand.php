@@ -5,7 +5,7 @@ class ExtendedSimpleCommand extends SimpleCommand
 	protected $session, $mysql, $view, $command, $id;
 	
 	//HTML vars
-	protected $includes, $inits, $module, $header, $navbar = "", $userbar= "", $bc_links, $page_title="", $container, $content, $sidebar, $footer, $json = array();
+	protected $includes, $inits, $module, $header, $navbar = "", $userbar= "", $bc_links, $page_title="", $container, $layout, $content, $sidebar, $footer, $json = array();
 	
 	//Token vars
 	protected $pre_tokens = array(), $post_tokens = array(), $global_tokens = array();
@@ -16,33 +16,34 @@ class ExtendedSimpleCommand extends SimpleCommand
 	//Error vals
 	public $error_vals = array( 'There was an error', 'You must fill in the required fields (*)' ), $actions;
 	
-	public function __construct()
-	{		
+	public function __construct(){		
 		parent::__construct();	
-		
-        
-		$this->last_page 	= isset($_SESSION['last_page']) 		? $_SESSION['last_page'] 					: 'index.php';
-		$this->view 		= isset( $_REQUEST['view'] ) 			? strtolower(trim($_REQUEST['view'])) 		: "";
-		$this->command 		= isset( $_REQUEST['command'] )			? strtolower(trim($_REQUEST['command']))	: "";
-		$this->id 			= isset( $_REQUEST['id'] )				? intval($_REQUEST['id'])					: 0;
-		$this->error 		= isset( $_REQUEST['error'] ) 			? (int)$_REQUEST['error'] 					: 0;
-		$this->submitted	= isset( $_REQUEST['submitted'] ) 		? (int)$_REQUEST['submitted'] 				: 0;
-		
-		$base_includes 	 	= $this->facade->retrieveProxy( IncludesProxy::NAME )->includes( "jquery" );
-		$base_inits	  		= '';
-		
-		$this->includes 	= $base_includes;
-		$this->inits 		= $base_inits;
-		
-		$this->module		= "";
-		$this->logout_link	= constructURL("index.php", array("view"=>"login", "command"=>"logout") );
-		
 		$this->mysql 		= new MySQL();	
 		$this->template 	= new Template();
         
+		
+        //Layouts
+        $this->container    = $this->loadTemplate('common/container.html');
+        $this->layout       = $this->loadTemplate('layouts/onecol.html');
         $this->header = $this->loadTemplate('common/header.html');
         $this->footer = $this->loadTemplate('common/footer.html');
+        
+        
+        //Requests (get and post)
+		$this->last_page = isset($_SESSION['last_page']) ? $_SESSION['last_page'] : 'index.php';        
+        $this->view = strtolower($this->checkPost('view'));
+        $this->command = strtolower($this->checkPost('command'));
+        $this->id = $this->checkPost('id', 0, 2);
+        $this->error = $this->checkPost('error', 0, 2);
 		
+        
+        //Includes and Initialisations
+		$this->includes 	= '';
+		$this->inits 		= '';
+		$this->addInclude('jquery');
+                
+		$this->module		= "";
+		$this->logout_link	= constructURL("/login", array( "command"=>"logout") );		
 		$this->site_title 	= $this->mysql->site_name;
         
 		$this->bc_links = array();
@@ -58,16 +59,20 @@ class ExtendedSimpleCommand extends SimpleCommand
 		//Check we are actually a valid user
         $this->loginCheck();
                 
-        $this->post_tokens[] = array(
+        $this->addPostTokens( array(
             '{MY_U_ID}'            => $this->session->user_id,
             '{MY_U_FNAME}'         => $this->session->fname,
             '{MY_U_LNAME}'         => $this->session->lname,
             '{MY_U_EMAIL}'         => $this->session->email
-        );
+        ));
         
 		$this->userbar = "Logged in ".easylink("(logout)", $this->logout_link );
 	}
 	
+    protected function addInclude( $include_type ){
+		$this->includes .= $this->facade->retrieveProxy( IncludesProxy::NAME )->includes( $include_type );
+    }
+    
 	protected function menuBreadcrumb( $links )
 	{
         if( sizeof($links)==0) return;
@@ -97,7 +102,8 @@ class ExtendedSimpleCommand extends SimpleCommand
 			'{INITIALISERS}' 		=> $this->inits,
 			'{HEADER}'				=> $this->header,	
 			'{USERBAR}'				=> $this->userbar,		
-			'{NAVBAR}'				=> $this->navbar,			
+			'{NAVBAR}'				=> $this->navbar,	
+            '{CONTENT}'             => $this->content,
 			'{FOOTER}'				=> $this->footer,
 			'{BREADCRUMB}'			=> $this->menuBreadcrumb($this->bc_links),
 			'{SIDEBAR}'             => $this->sidebar,
@@ -129,7 +135,7 @@ class ExtendedSimpleCommand extends SimpleCommand
         
 		if( !$this->session->valid() )
 		{
-			$this->redirect('index.php?view=login');		
+			$this->redirect('/login');		
 		} else {
 			$user = $this->user_proxy->getUser( $this->session->user_id );
 			$this->session->user( $user );
@@ -150,14 +156,20 @@ class ExtendedSimpleCommand extends SimpleCommand
 	protected function loadFile( $file ){ return $this->facade->retrieveProxy(TemplateProxy::NAME)->loadFile( $file ); }	
 	protected function loadTemplate( $file ){ return $this->loadFile( HTML.$file ); }
 	
+    protected function addPreTokens( $array ){
+        $this->pre_tokens[] = $array;
+    }
+    protected function addPostTokens( $array ){
+        $this->post_tokens[] = $array;
+    }
 	
 	public function buildPage( $pdf = false )
 	{
 		//Select the template
         
-		$this->facade->sendNotification( ApplicationFacade::TEMPLATE, $this->loadTemplate('common/container.html') );
+		$this->facade->sendNotification( ApplicationFacade::TEMPLATE, $this->container );
         
-		$this->facade->sendNotification( ApplicationFacade::TOKENIZE, array( '{CONTENT}' => $this->content ) );
+		$this->facade->sendNotification( ApplicationFacade::TOKENIZE, array( '{MAIN}' => $this->layout ) );
 		
 		//Add pre-universal tokens
 		foreach($this->pre_tokens as $pre_t)
@@ -180,7 +192,7 @@ class ExtendedSimpleCommand extends SimpleCommand
     
     public function printJSON()
 	{	
-		$this->facade->sendNotification( ApplicationFacade::TEMPLATE, json_encode( $this->json ) );	
+		$this->facade->sendNotification( ApplicationFacade::TEMPLATE, json_encode( $this->json, JSON_NUMERIC_CHECK ) );	
         
 		//Add pre-universal tokens
 		foreach($this->pre_tokens as $pre_t)
@@ -229,7 +241,7 @@ class ExtendedSimpleCommand extends SimpleCommand
 		}
 	}
 	
-	protected function redirect( $goto='index.php' )
+	protected function redirect( $goto='/home' )
 	{
 		header('Location:'.$goto );
 		exit();

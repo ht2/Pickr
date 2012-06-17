@@ -113,6 +113,7 @@ class MySQL
         $field_list = join( ',', $fields );
         $value_list = join( ', ', $values );
         $query = "INSERT INTO `" . $table . "` (" . $field_list . ") VALUES (" . $value_list . ")";
+        
         return $this->query( $query );
     }
 

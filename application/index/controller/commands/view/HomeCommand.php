@@ -7,6 +7,8 @@ class HomeCommand extends ExtendedSimpleCommand
 		
 		$this->module = "home";
         
+        $this->addInclude('validate');
+        
         switch( $this->command ){
             default:
                 $this->yourHome();
@@ -18,6 +20,8 @@ class HomeCommand extends ExtendedSimpleCommand
 
     public function yourHome() {
         $this->content = $this->loadTemplate('home/yourhome.html');
+        
+        
     }
 }
 

@@ -10,8 +10,6 @@ class UserProxy extends Proxy
 	const NAME = "UserProxy";
 	var $mysql;
     
-    var $user = false;
-    
 	public function __construct()
 	{
 		parent::__construct( UserProxy::NAME, new VO() );
@@ -19,32 +17,23 @@ class UserProxy extends Proxy
 		$this->mysql = new MySQL();
 	}
     
-    public function setUser($user){
-        $this->user = $user;
-    }
-    
-    
     public function getUser( $user_id ){
         $user_id = intval($user_id);
         $this->mysql->select("users", "user_id=$user_id");
         return $this->mysql->singleResult();
     }
-    
-    public function clearUser(){
-        $this->user = false;
-    }
-    
+        
     public function tokens()
     {	
-        if( $this->user === false ) return array();
+        if( $this->data == null ) return array();
         
         return array(
             '{U_EMAIL_LINK}'	=> easylink( '{U_EMAIL}', "mailto:{U_EMAIL}" ),
             '{U_NAME}'          => '{U_FNAME} {U_LNAME}',
-            '{U_ID}'            => $this->user->user_id,
-            '{U_FNAME}'         => $this->user->fname,
-            '{U_LNAME}'         => $this->user->lname,
-            '{U_EMAIL}'         => $this->user->email
+            '{U_ID}'            => $this->data->user_id,
+            '{U_FNAME}'         => $this->data->fname,
+            '{U_LNAME}'         => $this->data->lname,
+            '{U_EMAIL}'         => $this->data->email
         );
     }
 	

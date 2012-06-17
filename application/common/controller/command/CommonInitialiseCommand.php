@@ -19,6 +19,7 @@ class CommonInitialiseCommand extends SimpleCommand
 		// Register Mediators / Proxies
 		$this->facade->registerProxy( new LoginProxy() );
 		$this->facade->registerProxy( new UserProxy() );
+		$this->facade->registerProxy( new FilmsProxy() );
 		$this->facade->registerProxy( new IncludesProxy() );
 		$this->facade->registerProxy( new TemplateProxy() );
 		$this->facade->registerMediator( new TemplateMediator( new Template() ) );

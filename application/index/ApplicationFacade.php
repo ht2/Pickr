@@ -12,10 +12,12 @@ class ApplicationFacade extends Facade
 	const TEMPLATE		= "application/template";
 	const TOKENIZE		= "application/tokenize";
 	const RENDER		= "application/render";
+	const RENDER_JSON   = "application/render/json";
 	const STATE		 	= "application/state";
 	
 	// View commands
 	const VIEW_HOME     = "view/home";
+	const VIEW_AJAX     = "view/ajax";
 	const VIEW_LOGIN	= "view/login";
 
 	static public function getInstance()
@@ -34,6 +36,7 @@ class ApplicationFacade extends Facade
 		
 		// View commands
 		$this->registerCommand( ApplicationFacade::VIEW_HOME, 'HomeCommand' );
+		$this->registerCommand( ApplicationFacade::VIEW_AJAX, 'AjaxCommand' );
 		$this->registerCommand( ApplicationFacade::VIEW_LOGIN, 'LoginCommand' );
 	}	
 	

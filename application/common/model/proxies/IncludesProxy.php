@@ -28,10 +28,14 @@ class IncludesProxy extends Proxy
 		switch( $type )
 		{
 			case 'jquery':
-				$output .=  br('<script type="text/javascript" src="/view/packages/jquery/jquery-1.6.1.min.js"></script>');
+				$output .=  br('<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>');
 				$output .= br('<script type="text/javascript" src="/view/javascript/commonJQuery.js"></script>');	
 			break;
 			
+            case 'validate':
+				$output .= $this->includeJS( '/view/packages/jquery-validation-1.9.0/jquery.validate.min.js' );
+			break;
+        
 			case "tiptip":
 				$output .= $this->includeCSS( 'tipTip.css', '/view/packages/tiptip/' );
 				$output .= $this->includeJS( '/view/packages/tiptip/jquery.tipTip.minified.js' );

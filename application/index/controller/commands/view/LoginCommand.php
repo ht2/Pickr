@@ -50,7 +50,7 @@ class LoginCommand extends ExtendedSimpleCommand
             $this->redirect();
         } else {
             //Incorrect login - Redirect to actual login page
-            $this->redirect( 'index.php?view=login&error=1' );
+            $this->redirect( '/login' );
         }
     }
     

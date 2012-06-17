@@ -1,3 +1,82 @@
 <h2>Home</h2>
 <p>Hey {MY_U_FNAME}!</p>
-<p>What do you want to do?</p>
+
+<h3>My films</h3>
+{MY_FILMS}
+
+
+<h3>Add a film</h3>
+<div id='add'>
+    <p>To add a film to the database, enter its name of preferably its IMDB ID.</p>
+    <p>This can be located in the URL of the film when viewing in IMDB (e.g.: <a href="http://www.imdb.com/title/tt1446714/">Prometheus = tt1446714</a> );
+    
+    <div>
+        <form action="ajax/check_name" id="name_check" class='validate'>
+            <label>Film name: </label>
+            <input type='text' name='film_name' class='required'/><input type="submit" value="Check"/>
+        </form>
+        
+        <p>or</p>
+        
+        <form action="ajax/check_id" id="id_check" class='validate'>
+            <label>IMDB Film ID: <input type='text' name='imdb_id' class='required'/></label> <input type="submit" value="Check"/>
+        </form>
+    </div>
+</div>
+
+<div id='loading' style='display:none;'></div>
+
+<div id='results' style='display:none;'>
+    
+</div>
+    
+<script type='text/javascript'>
+    $(document).ready( init );
+    
+    function init(){
+        $('.validate').validate();
+        
+        $('#name_check, #id_check').submit( checkFilm );
+        
+        $('#add_another').live('click', addAnotherFilm )
+    }
+    
+    function addAnotherFilm(event){
+        event.preventDefault();
+        $('#add').show();
+        $('#loading, #results').hide();
+        
+        $('input[name=film_name]').val('').focus();
+    }
+    
+    function checkFilm(event){
+        event.preventDefault();
+        var form = $(this);
+        
+        if( form.valid() ){ 
+            $('#add').hide();
+            $('#loading').show();
+            
+            //Call the ajax service to retrieve the film
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                method: 'json'
+            }).done( function(data){
+                $('#loading').hide();
+                
+                if( data.error ){
+                    $('#add').show();
+                    $('#results').html( data.error ).show();
+                } else {
+                    $('#results').html( data.html ).show();
+                }
+            }).error( function(e){
+                $('#loading').hide();
+                $('#add').show();
+                $('#results').html( e.toString() ).show();
+            });
+        }
+    }
+</script>

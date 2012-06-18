@@ -20,7 +20,8 @@ class FilmsProxy extends Proxy
 	}
     
     public function allFilms(){
-        
+        $this->mysql->select("films_norm");
+        return $this->mysql->results();
     }
     
     public function usersFilms( $user_id ){        
@@ -29,29 +30,36 @@ class FilmsProxy extends Proxy
     }
     
     public function tokens( $film ){        
-        
-        $genres = explode(',', $film->genres );
-        
-        foreach( $genres as &$g ){
-            $g = easylink( $g, "search/genres/$g" );
-        }
+                
+        $genres = $this->genreList( $film->genres );
         
         return array(
+            '{F_IMDB_ID}'   =>  $film->imdbID,
             '{F_TITLE}'     =>  $film->title,
             '{F_YEAR}'      =>  $film->year,
             '{F_RUNTIME}'   =>  $film->runtime,
-            '{F_GENRES}'    =>  implode( ', ', $genres ),
+            '{F_GENRES}'    =>  $genres,
             '{F_DIRECTOR}'  =>  $film->director,
             '{F_ACTORS}'    =>  $film->actors,
             '{F_IMAGE}'     =>  $film->image,
         );
     }
     
+    public function genreList( $genres ){
+        
+        $genres = explode(',', $genres );
+        foreach( $genres as &$g ){
+            $g = easylink( $g, "search/genres/$g" );
+        }
+        
+        return implode( ', ', $genres );
+    }
+    
     public function checkFilm( $imdb_data ){
         $film = $this->facade->retrieveProxy( FilmsProxy::NAME)->getFilm( $imdb_data->imdbID );
         if( !$film ){
             $this->insertFilm( $imdb_data, $this->session->user_id );
-            return $this->checkFilm( $imdb_data);
+            return $this->checkFilm( $imdb_data );
         } else {
             return $film;
         }
@@ -71,7 +79,7 @@ class FilmsProxy extends Proxy
     public function insertFilm( $imdb_data, $user_id ){
         
         $f_id = $this->mysql->insert('films', array(
-            'u_id'      =>  $user_id,
+            'user_id'   =>  $user_id,
             'imdbID'    =>  $imdb_data->imdbID,
             'title'     =>  $imdb_data->Title,
             'year'      =>  $imdb_data->Year,

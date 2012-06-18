@@ -28,23 +28,21 @@ class IncludesProxy extends Proxy
 		switch( $type )
 		{
 			case 'jquery':
-				$output .=  br('<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>');
-				$output .= br('<script type="text/javascript" src="/view/javascript/commonJQuery.js"></script>');	
+				$output .= br('<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>');
+				$output .= br('<script type="text/javascript" src="/view/packages/jquery.ui/js/jquery-ui-1.8.21.custom.min.js"></script>');
+				$output .= $this->includeCSS( 'jquery-ui-1.8.21.custom.css', '/view/packages/jquery.ui/css/smoothness/' );
+				$output .= br('<script type="text/javascript" src="/view/javascript/commonJQuery.js"></script>');	;	
 			break;
 			
             case 'validate':
 				$output .= $this->includeJS( '/view/packages/jquery-validation-1.9.0/jquery.validate.min.js' );
 			break;
         
-			case "tiptip":
-				$output .= $this->includeCSS( 'tipTip.css', '/view/packages/tiptip/' );
-				$output .= $this->includeJS( '/view/packages/tiptip/jquery.tipTip.minified.js' );
-			break;
-			
-			case "nyroModal":
-				$output .= $this->includeCSS( 'nyroModal.css', '/view/packages/nyroModal/styles/' );
-				$output .= $this->includeJS( '/view/packages/nyroModal/js/jquery.nyroModal.custom.min.js' );
-			break;
+			case "datatables":
+				$output .= $this->includeJS( '/view/packages/DataTables-1.9.1/media/js/jquery.dataTables.min.js' );
+				$output .= $this->includeCSS( 'jquery.dataTables_themeroller.css', '/view/packages/DataTables-1.9.1/media/css/' );
+				$output .= $this->includeJS( '/view/packages/DataTables-1.9.1/media/js/dataTables.init.js' );
+            break;
 				
 		}
 		return $output;

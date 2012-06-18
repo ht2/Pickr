@@ -22,6 +22,7 @@ class CommonInitialiseCommand extends SimpleCommand
 		$this->facade->registerProxy( new FilmsProxy() );
 		$this->facade->registerProxy( new IncludesProxy() );
 		$this->facade->registerProxy( new TemplateProxy() );
+		$this->facade->registerProxy( new TablesProxy() );
 		$this->facade->registerMediator( new TemplateMediator( new Template() ) );
 	
 		// Get current state

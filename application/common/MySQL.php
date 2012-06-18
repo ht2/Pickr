@@ -27,11 +27,11 @@ class MySQL
         }
 
         $this->mysqli = new mysqli( $this->host, $this->user, $this->pass, $this->database );
-        $this->checkError();
+        $this->checkConnectError();
         
     }
     
-    private function checkError(){
+    private function checkConnectError(){
         if ($this->mysqli->connect_errno) {
             $this->error("Failed to connect to MySQL: (" . $this->mysqli->connect_errno . ") " . $this->mysqli->connect_error );
         }
@@ -40,7 +40,8 @@ class MySQL
     public function query($query)
     {
         $this->result = $this->mysqli->query($query);
-        $this->checkError();
+        if( !$this->result )
+            $this->error( $this->mysqli->error);
         return $this->last_id();
     }	
 
@@ -85,7 +86,7 @@ class MySQL
 
     public function error( $error )
     {
-        echo $error;
+        var_dump($error);
         exit();
     }
 

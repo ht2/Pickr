@@ -25,6 +25,8 @@ class AjaxCommand extends ExtendedSimpleCommand
 	}
 
     public function checkName() {
+        
+        
         $film_name = urlencode($this->checkPost('film_name'));
         if( strlen($film_name)>0 ){
             $film_data = json_decode( file_get_contents( "http://www.imdbapi.com/?t=$film_name") );
@@ -41,23 +43,26 @@ class AjaxCommand extends ExtendedSimpleCommand
     }
     
     public function handleFilmData( $film_data ){
-        
-        if( !isset($film_data->error) ){            
+        if( $film_data->Response === "False"  ){    
+            $this->json['error'] = para("Error retrieving your film. Please try again (".$film_data->Error.")", "error");
+        } else {
             $film = $this->facade->retrieveProxy( FilmsProxy::NAME)->checkFilm( $film_data );
             
             if( $film ){
                 $tokens =  $this->facade->retrieveProxy( FilmsProxy::NAME)->tokens( $film );
+                $tokens['{VOTE_INFO}'] = para("Vote info will go here.");
                 $html = $this->loadTemplate('films/film_info.html');            
                 $html = $this->template->tokenize($tokens, $html);
                 
-                $html .= $this->loadTemplate('home/add_another.html');
+                $html = $this->loadTemplate('home/add_another.html') . $html;
                 
                 $this->json['html'] = $html;
+                
+                $films = $this->facade->retrieveProxy( FilmsProxy::NAME)->allFilms();
+                $this->json['all_films'] = $this->facade->retrieveProxy( TablesProxy::NAME)->viewFilms( $films );
             } else {
                 $this->json['error'] = "There was an error finding your film. Please try again.";
             }
-        } else{
-            $this->json['error'] = "Error reteiving your film";
         }
     }
 }

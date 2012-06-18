@@ -1,13 +1,11 @@
 <h2>Home</h2>
 <p>Hey {MY_U_FNAME}!</p>
 
-<h3>My films</h3>
-{MY_FILMS}
 
 
-<h3>Add a film</h3>
-<div id='add'>
-    <p>To add a film to the database, enter its name of preferably its IMDB ID.</p>
+<div id='add' class='shadowbox'>
+    <h3>Add a film</h3>
+    <p>To add a film to the database, enter its name or IMDB ID.</p>
     <p>This can be located in the URL of the film when viewing in IMDB (e.g.: <a href="http://www.imdb.com/title/tt1446714/">Prometheus = tt1446714</a> );
     
     <div>
@@ -25,10 +23,11 @@
 </div>
 
 <div id='loading' style='display:none;'></div>
+<div id='results' style='display:none;'></div>
 
-<div id='results' style='display:none;'>
-    
-</div>
+
+<h3>All Films</h3>
+<div id='all_films'>{ALL_FILMS}</div>
     
 <script type='text/javascript'>
     $(document).ready( init );
@@ -47,7 +46,7 @@
         $('#loading, #results').hide();
         
         $('input[name=film_name]').val('').focus();
-        $('input[name=imdb_id]').val('').focus();
+        $('input[name=imdb_id]').val('');
     }
     
     function checkFilm(event){
@@ -57,6 +56,7 @@
         if( form.valid() ){ 
             $('#add').hide();
             $('#loading').show();
+            $('#results').html( '' ).hide();
             
             //Call the ajax service to retrieve the film
             $.ajax({
@@ -72,11 +72,13 @@
                     $('#results').html( data.error ).show();
                 } else {
                     $('#results').html( data.html ).show();
+                    $('#all_films').html( data.all_films );
+                    initDataTables();
                 }
             }).error( function(e){
                 $('#loading').hide();
                 $('#add').show();
-                $('#results').html( e.toString() ).show();
+                $('#results').html( "<p class='error'>There was an error loading your film.<\/p>").show();
             });
         }
     }

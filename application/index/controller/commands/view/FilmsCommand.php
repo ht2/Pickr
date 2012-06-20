@@ -7,6 +7,9 @@ class FilmsCommand extends ExtendedSimpleCommand
 		
 		$this->module = "films";
         
+        $this->addInclude('validate');
+        $this->inits .= $this->facade->retrieveProxy(IncludesProxy::NAME )->includeJS('view/templates/films/js/rating.js');
+        
         switch( $this->command ){
             default:
             case "all":
@@ -21,11 +24,28 @@ class FilmsCommand extends ExtendedSimpleCommand
 	}
 
     public function viewFilm() {
-        $this->content = "View film";
+        $film = $this->facade->retrieveProxy(FilmsProxy::NAME )->getFilm( $this->id );
+        if( !$film ) $this->redirect ('/films');
+        
+        $this->content = $this->loadTemplate('films/view_film.html');
+        
+        $this->addPostTokens(array(
+            '{FILM_INFO}'   =>  $this->loadTemplate('films/film_info.html')
+        ));
+        
+        
+        $film_tokens = $this->facade->retrieveProxy(FilmsProxy::NAME )->tokens( $film );
+        $this->addPostTokens( $film_tokens );
     }
 
     public function allFilms() {
-        $this->content = "All films";
+        $this->content = $this->loadTemplate('films/allfilms.html');
+        
+        $films = $this->facade->retrieveProxy(FilmsProxy::NAME )->allFilms();
+        
+        $this->addPostTokens(array(
+            '{ALL_FILMS}'   => $this->facade->retrieveProxy( TablesProxy::NAME )->viewFilms( $films, $this->session->user_id )
+        ));
     }
 }
 

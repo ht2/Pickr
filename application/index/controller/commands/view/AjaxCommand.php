@@ -19,6 +19,10 @@ class AjaxCommand extends ExtendedSimpleCommand
             case "check_id":
                 $this->checkID();
                 break;
+            
+            case "vote":
+                $this->doVote();
+                break;
         }
 		
 		$this->printJSON();
@@ -50,19 +54,32 @@ class AjaxCommand extends ExtendedSimpleCommand
             
             if( $film ){
                 $tokens =  $this->facade->retrieveProxy( FilmsProxy::NAME)->tokens( $film );
-                $tokens['{VOTE_INFO}'] = para("Vote info will go here.");
+                $vote = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVote( $this->session->user_id, $film->f_id );                
+                $tokens['{VOTE_INFO}'] = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVoteWidget( $vote, $film );
                 $html = $this->loadTemplate('films/film_info.html');            
                 $html = $this->template->tokenize($tokens, $html);
                 
-                $html = $this->loadTemplate('home/add_another.html') . $html;
+                $html = $this->loadTemplate('films/add_another.html') . $html;
                 
                 $this->json['html'] = $html;
                 
                 $films = $this->facade->retrieveProxy( FilmsProxy::NAME)->allFilms();
-                $this->json['all_films'] = $this->facade->retrieveProxy( TablesProxy::NAME)->viewFilms( $films );
+                $this->json['all_films'] = $this->facade->retrieveProxy( TablesProxy::NAME)->viewFilms( $films, $this->session->user_id );
             } else {
                 $this->json['error'] = "There was an error finding your film. Please try again.";
             }
+        }
+    }
+
+    public function doVote() {
+        $rating = $this->checkPost('rating', 0, 2);
+        
+        $html = $this->facade->retrieveProxy( FilmsProxy::NAME )->pushVote( $this->id, $this->session->user_id, $rating );
+        if( !$html ){
+            $this->json['error'] = true;
+        } else {
+            $this->json['rating'] = $rating;
+            $this->json['html'] = $html;
         }
     }
 }

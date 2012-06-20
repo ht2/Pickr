@@ -1,85 +1,27 @@
-<h2>Home</h2>
-<p>Hey {MY_U_FNAME}!</p>
+<h2>Hey {MY_U_FNAME}!</h2>
+<p>Welcome to Pickr!</p>
 
-
-
-<div id='add' class='shadowbox'>
-    <h3>Add a film</h3>
-    <p>To add a film to the database, enter its name or IMDB ID.</p>
-    <p>This can be located in the URL of the film when viewing in IMDB (e.g.: <a href="http://www.imdb.com/title/tt1446714/">Prometheus = tt1446714</a> );
-    
-    <div>
-        <form action="ajax/check_name" id="name_check" class='validate'>
-            <label>Film name: </label>
-            <input type='text' name='film_name' class='required'/><input type="submit" value="Check"/>
-        </form>
-        
-        <p>or</p>
-        
-        <form action="ajax/check_id" id="id_check" class='validate'>
-            <label>IMDB Film ID: <input type='text' name='imdb_id' class='required'/></label> <input type="submit" value="Check"/>
-        </form>
+<div class='cf'>
+    <div class='fleft' style='width:33%;'>
+        <div class='shadowbox' style='margin-right: 10px;'>
+            <h3>Films</h3>
+            <p>Why not <a href='/films#add'>add a film</a>, or <a href='/films#browse'>browse the library</a> and vote!</p>     
+        </div>
+    </div>
+    <div class='fleft' style='width:34%;'>
+        <div class='shadowbox' style='margin-left: 10px; margin-right: 10px;'>
+            <h3>Genres</h3>
+            <p>Try browsing by <a href='/genres'>genre</a>...</p>     
+        </div>
+    </div>
+    <div class='fleft' style='width:33%;'>
+        <div class='shadowbox' style='margin-left: 10px;'>
+            <h3>Results</h3>
+            <p>See which films are <a href='/results'>leading the way</a>...</p>     
+        </div>
     </div>
 </div>
 
-<div id='loading' style='display:none;'></div>
-<div id='results' style='display:none;'></div>
-
-
-<h3>All Films</h3>
-<div id='all_films'>{ALL_FILMS}</div>
-    
-<script type='text/javascript'>
-    $(document).ready( init );
-    
-    function init(){
-        $('.validate').validate();
-        
-        $('#name_check, #id_check').submit( checkFilm );
-        
-        $('#add_another').live('click', addAnotherFilm )
-    }
-    
-    function addAnotherFilm(event){
-        event.preventDefault();
-        $('#add').show();
-        $('#loading, #results').hide();
-        
-        $('input[name=film_name]').val('').focus();
-        $('input[name=imdb_id]').val('');
-    }
-    
-    function checkFilm(event){
-        event.preventDefault();
-        var form = $(this);
-        
-        if( form.valid() ){ 
-            $('#add').hide();
-            $('#loading').show();
-            $('#results').html( '' ).hide();
-            
-            //Call the ajax service to retrieve the film
-            $.ajax({
-                url: form.attr('action'),
-                type: 'POST',
-                data: form.serialize(),
-                method: 'json'
-            }).done( function(data){
-                $('#loading').hide();
-                
-                if( data.error ){
-                    $('#add').show();
-                    $('#results').html( data.error ).show();
-                } else {
-                    $('#results').html( data.html ).show();
-                    $('#all_films').html( data.all_films );
-                    initDataTables();
-                }
-            }).error( function(e){
-                $('#loading').hide();
-                $('#add').show();
-                $('#results').html( "<p class='error'>There was an error loading your film.<\/p>").show();
-            });
-        }
-    }
-</script>
+<h2>Your Votes</h2>
+<p>Check out which films you have voted for on the <a href='/films#browse'>Films</a> page.</p>
+<div id='your_films' class='shadowbox'>{YOUR_FILMS}</div>

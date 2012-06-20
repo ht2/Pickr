@@ -2,20 +2,29 @@ body
 {	
 	text-align: center;	
 	background: #FFFFFF;
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: sans-serif;
 	font-size: 75%;
 	color: #333;
+    background: #cccccc url('../images/bk.png') center center repeat-y;
+}
+
+html{
 }
 
 /**********************************************TYPOGRAPHY**********************************************/
 h1, h2, h3, h4, h5, h6, p{
-    margin: 0 0 1em 0;
+    margin: 0 0 10px 0;
+    color: #396489;
 }
 
-h1{ font-size: 1.6em; }
-h2{ font-size: 1.4em; }
-h3{ font-size: 1.2em; }
-h4{ font-size: 1.0em; }
+p{
+    margin: 10px 0;
+}
+
+h1{ font-size: 2em; }
+h2{ font-size: 1.8em; }
+h3{ font-size: 1.6em; }
+h4{ font-size: 1.2em; }
 
 a:link		{ color: #003366; }
 a:visited	{ color: #003366; }
@@ -44,14 +53,12 @@ label.error{ margin: 0 10px;}
 #supercontainer{
 	width: 975px;
 	margin: 0 auto;
-	color: #003366;
+	color: #396489;
 	text-align: left;
 }
 
 #header{
-	margin: 10px 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #003366;
+	margin: 10px 0 20px 0;
 }
 
 #header #logo{
@@ -67,6 +74,45 @@ label.error{ margin: 0 10px;}
 
 #header #userbar{
     float: right;
+}
+
+
+
+#navbar ul{
+    margin: 10px 0;
+    border: 1px solid #396489;
+    border-left: none;
+    border-right: none;
+}
+
+#navbar ul li{
+    float: left;
+    height: 100%;
+}
+
+#navbar ul li a{
+    display: block;
+    padding: 15px;
+    background: #FFF;
+    color: #396489;
+    font-size: 1.4em;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-right: 1px solid #396489;
+}
+
+#navbar ul li:last-child a{
+    border: none;
+}
+
+#home #navbar ul li.home a,
+#films #navbar ul li.films a,
+#genres #navbar ul li.genres a,
+#results #navbar ul li.results a,
+#navbar ul li a:hover{
+    background: #396489 url('../images/35mm.png') center center repeat-x;
+    color: #FFF;
+    border-color: #FFF;
 }
 
 #content{
@@ -89,20 +135,112 @@ label.error{ margin: 0 10px;}
     padding: 10px;
     border: 1px solid #666666;
     margin: 10px 0 20px 0;
-    background: #EEE;
+    background: #dff0ff;
   -webkit-border-radius: 10px;
           border-radius: 10px;
           
           
-  -webkit-box-shadow: 2px 2px 4px 0px #999999;
-          box-shadow: 2px 2px 4px 0px #999999;
+  -webkit-box-shadow: 2px 2px 4px 0px #396489;
+          box-shadow: 2px 2px 4px 0px #396489;
 }
 
 .film_info img{
     display: block;
-    min-width: 400px;
+    min-width: 300px;
     background: #ddd url('../images/circle_loading.gif') center center no-repeat;
-    min-height: 400px;
+    min-height: 300px;
     text-align: center;
     
 }
+
+
+.row{
+/*overflow: auto;*/
+width: 100%;
+margin-bottom: 1em;
+}
+
+.row.half{
+float: left;
+width: 49%;
+margin-right: 1%;
+}
+
+.row label{
+font-weight: bold;
+display: block;
+margin-bottom: 0.5em;
+}
+
+.row label.error{
+    font-weight:normal;
+    margin: 5px 0 15px;
+}
+
+.row input,
+.row textarea{
+width: 99%;
+}
+
+.row textarea.tinymce{
+    width: 99%;
+    height: 400px;
+}
+
+.row input[type=submit],
+.row input[type=checkbox]{
+    width: auto;
+}
+
+input,
+select, option,
+textarea{
+font-size:100%;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 10pt;
+color: #666;
+padding: 4px;
+}
+
+input,
+textarea,
+input:not([type="checkbox"]){
+    border: 1px solid #999;
+}
+
+input[type=submit],
+input[type=button]{
+    cursor: pointer;
+    padding: 4px 8px;
+    font-weight:bold;
+    text-transform: uppercase;
+    
+    
+  -webkit-border-radius: 5px;
+          border-radius: 5px;
+
+}
+
+
+.rate_widget {  
+        overflow:   visible;  
+        padding:    2px 4px;  
+        position:   relative;   
+        height:     20px;  
+        width: 100px;
+}  
+.ratings_stars {  
+    background: url('../images/star_empty.png') center center no-repeat;  
+    float:      left;  
+    height:     0;  
+    padding:    20px 2px 0 2px;  
+    width:      16px;
+    overflow:hidden;
+    cursor: pointer;
+}  
+.ratings_over {  
+    background: url('../images/star_highlight.png') center center no-repeat;  
+}  
+.ratings_vote {  
+    background: url('../images/star_full.png') center center no-repeat;  
+}  

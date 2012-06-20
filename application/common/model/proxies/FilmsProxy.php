@@ -17,10 +17,23 @@ class FilmsProxy extends Proxy
 		parent::__construct( FilmsProxy::NAME );
 		$this->session = new Session();
 		$this->mysql = new MySQL();
+		$this->template = new Template();
 	}
     
     public function allFilms(){
         $this->mysql->select("films_norm");
+        return $this->mysql->results();
+    }
+    
+    public function yourFilms($user_id){
+        $user_id = intval($user_id);
+        $query = "
+            SELECT f.*, v.rating
+            FROM votes v
+            JOIN films_norm f ON v.f_id = v.f_id AND v.active=1
+            WHERE v.user_id = $user_id
+        ";
+        $this->mysql->query( $query );
         return $this->mysql->results();
     }
     
@@ -49,7 +62,7 @@ class FilmsProxy extends Proxy
         
         $genres = explode(',', $genres );
         foreach( $genres as &$g ){
-            $g = easylink( $g, "search/genres/$g" );
+            $g = easylink( $g, "/genres/$g" );
         }
         
         return implode( ', ', $genres );
@@ -72,7 +85,7 @@ class FilmsProxy extends Proxy
     }
     
     public function getAllFilms(){
-        $this->mysql->select( "films" );
+        $this->mysql->select( "films_norm" );
         return $this->mysql->results();
     }
     
@@ -125,6 +138,48 @@ class FilmsProxy extends Proxy
 
     public function insertGenre( $genre_name ){
         return $this->mysql->insert("genres", array('name'=>$genre_name) );
+    }
+    
+    public function getVote( $user_id, $f_id ){
+        $user_id = intval($user_id);
+        $f_id = intval($f_id);
+        
+        $this->mysql->select( "votes", "user_id=$user_id AND f_id=$f_id");
+        return $this->mysql->singleResult();
+    }
+    
+    public function getVoteWidget( $vote, $film ){
+        $vote_cont = TemplateProxy::loadFile('view/templates/films/rate_widget.html');
+        
+        $rating = ( !$vote ) ? 0 :  $vote->rating;
+        
+        return $this->template->tokenize( array('{F_IMDB_ID}'=>$film->imdbID, '{RATING}'=>$rating), $vote_cont );
+    }
+    
+    public function pushVote( $imdbID, $user_id, $rating ){
+        $film = $this->getFilm($imdbID);
+        if( !$film ) return false;
+        
+        $f_id = $film->f_id;
+        $user_id    = intval($user_id);
+        $rating     = intval($rating);
+        
+        $this->mysql->query("DELETE FROM votes WHERE user_id=$user_id AND f_id=$f_id");
+        $v_id = $this->mysql->insert(
+            "votes", 
+            array( 
+                'f_id'      =>  $f_id,
+                'user_id'   =>  $user_id,
+                'rating'    =>  $rating
+            )
+        );
+        
+        $v_id = intval($v_id);
+        if( $v_id == 0 ) return false;
+        
+        $this->mysql->select( "votes", "v_id=$v_id");
+        $vote = $this->mysql->singleResult();
+        return $this->getVoteWidget( $vote, $film );
     }
     
     

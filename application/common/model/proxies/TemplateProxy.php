@@ -10,18 +10,18 @@ class TemplateProxy extends Proxy
 		$this->template = new Template();
 	}
 	
-	public function loadFile( $url )
+	public static function loadFile( $url )
 	{
 		$file = file_get_contents( $url ) or die("error loading file");
 		return $file;
 	}
 	
-	public function createSortableTable( $header_columns, $body_rows, $table_ident="", $header_options = array() )
+	public function createSortableTable( $header_columns, $body_rows, $table_ident="", $header_options = array(), $class='sortable' )
 	{
 		$table_id = ($table_ident=="") ? "" : "id='$table_ident'";
 		
 		//HEAD
-		$html = br("<table class='sortable' ".$table_id." cellspacing='1'>");
+		$html = br("<table class='$class' ".$table_id." cellspacing='1'>");
 		$html.= br("<thead>");
 		$html.= br("<tr>");
         $i = 0;

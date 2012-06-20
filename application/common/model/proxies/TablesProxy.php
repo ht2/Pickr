@@ -19,24 +19,37 @@ class TablesProxy extends Proxy
 		$this->mysql = new MySQL();
 	}
     
-    public function viewFilms( $films ){
-        $headers = array( 'Title', 'Runtime', 'Genres', 'Year', 'Director', 'Lead Actor', 'IMDB ID', 'Added by' );
+    public function viewFilms( $films, $user_id ){
+        $headers = array( 'Title', 'Runtime', 'Genres', 'Year', 'Director', 'Contributor', 'ActualRating', 'Rating' );
         
         
         $rows = array();
         foreach( $films as $f ){
-            $link = easylink( $f->title, 'films/view/'.$f->f_id );
+            $link = easylink( $f->title, 'films/view/'.$f->imdbID );
             $genres = $this->facade->retrieveProxy(FilmsProxy::NAME)->genreList( $f->genres );
             $added_by = $f->fname . " " . substr($f->lname, 0, 1);
             $actors = explode( ',', $f->actors );
             $lead_actor = ( sizeof($actors)>0) ? trim( $actors[0]) : "-";
             $external_link = easylink( $f->imdbID, 'http://www.imdb.com/title/'.$f->imdbID, 'Go to the IMDB page for this film', '', 'target="_blank"' );
             
-            $row = array( $link, $f->runtime, $genres, $f->year, $f->director, $lead_actor, $external_link, $added_by );
+            $vote = $this->facade->retrieveProxy( FilmsProxy::NAME )->getVote($user_id, $f->f_id);
+            $vote_widget =  $this->facade->retrieveProxy( FilmsProxy::NAME )->getVoteWidget( $vote, $f );
+            
+            $row = array( $link, $f->runtime, $genres, $f->year, $f->director, $added_by, $vote->rating, $vote_widget );
             $rows[] = $row;
         }
         
-        return $this->facade->retrieveProxy(TemplateProxy::NAME)->createSortableTable( $headers, $rows, 'filmsTable');
+        $options = array(
+            null,
+            array('align'=>'center'),
+            null,
+            array('align'=>'center'),
+            null,
+            null,
+            array('align'=>'center')
+        );
+        
+        return $this->facade->retrieveProxy(TemplateProxy::NAME)->createSortableTable( $headers, $rows, 'filmsTable', $options, 'diffsortable');
     }
     
     

@@ -21,10 +21,16 @@ class HomeCommand extends ExtendedSimpleCommand
     public function yourHome() {
         $this->content = $this->loadTemplate('home/yourhome.html');
         
-        $films = $this->facade->retrieveProxy(FilmsProxy::NAME )->allFilms();
+        $your_films = $this->facade->retrieveProxy(FilmsProxy::NAME )->yourFilms( $this->session->user_id );
+        
+        if( sizeof($your_films)==0 ){
+            $yf_html = para("You haven't voted on any films, head to the ".easylink('films', '/films')." page to browse and add to the library.");
+        } else {
+            $yf_html = "test";
+        }
         
         $this->addPostTokens(array(
-            '{ALL_FILMS}'   => $this->facade->retrieveProxy( TablesProxy::NAME )->viewFilms( $films )
+            '{YOUR_FILMS}'   => $yf_html
         ));
         
         

@@ -1,8 +1,10 @@
 $(document).ready( initDataTables );
 
-function initDataTables(){
-    $('.sortable').dataTable({
+var dataTableOptions = {
         "bJQueryUI": true,
         "sPaginationType": "full_numbers" 
-    });
+};
+
+function initDataTables(){
+    $('.sortable').dataTable(dataTableOptions);
 }

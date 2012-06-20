@@ -33,7 +33,7 @@ class ExtendedSimpleCommand extends SimpleCommand
 		$this->last_page = isset($_SESSION['last_page']) ? $_SESSION['last_page'] : 'index.php';        
         $this->view = strtolower($this->checkPost('view'));
         $this->command = strtolower($this->checkPost('command'));
-        $this->id = $this->checkPost('id', 0, 2);
+        $this->id = $this->checkPost('id');
         $this->error = $this->checkPost('error', 0, 2);
 		
         
@@ -141,6 +141,8 @@ class ExtendedSimpleCommand extends SimpleCommand
 			$user = $this->user_proxy->getUser( $this->session->user_id );
 			$this->session->user( $user );
 		}
+        
+        $this->navbar = "<ul class='cf'><li class='home'><a href='/home'>Home</a></li><li class='films'><a href='/films'>Films</a></li><li class='genres'><a href='/genres'>Genres</a></li><li class='results'><a href='/results'>Results</a></li></ul>";
 	}
     
 	protected function drawActions( $actions ){

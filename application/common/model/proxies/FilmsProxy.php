@@ -182,6 +182,28 @@ class FilmsProxy extends Proxy
         return $this->getVoteWidget( $vote, $film );
     }
     
+    public function getSuggestions( $user_id, $count=1, $existing = array() ){
+        $user_id = intval($user_id);
+        $count = intval($count);
+        
+        $existing_filter = "";
+        foreach ($existing as $imdbID) {
+            $existing_filter.= sprintf("AND f.imdbID!='%s' ", $imdbID);
+        }
+        
+        $query = "
+            SELECT f.*
+            FROM films_norm f
+            WHERE f.f_id NOT IN (
+                SELECT f_id FROM votes WHERE user_id=$user_id AND active=1
+            ) $existing_filter
+            ORDER BY RAND()
+            LIMIT $count
+        ";
+        $this->mysql->query($query);
+        return $this->mysql->results();
+    }
+    
     
 	
 }

@@ -27,6 +27,13 @@ function initRatings(){
                     widget.data( 'rating', data.rating );  
                 }
                 set_votes(widget, true, data.html);
+                
+                try {
+                    loadSuggestions(1, true, widget);
+                    
+                } catch(err) {
+                    // Handle error(s) here
+                }
             },  
             'json'  
         );
@@ -46,10 +53,13 @@ function set_votes(widget, refresh, html) {
     widget.find('.star_' + rating).nextAll().removeClass('ratings_vote');
 
     if( refresh ){
-        var td = widget.closest('td');  
-        var aPos = oTable.fnGetPosition( td[0] );
-        
-        oTable.fnUpdate( rating, aPos[0], 6 );
-        oTable.fnUpdate( html, aPos[0], 7 );
+        if( widget.closest('table').is('#filmsTable') ){
+            var td = widget.closest('td');
+            var aPos = oTable.fnGetPosition( td[0] );        
+            oTable.fnUpdate( rating, aPos[0], 6 );
+            oTable.fnUpdate( html, aPos[0], 7 );
+        }
     }
+    
+
 }  

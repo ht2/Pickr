@@ -11,7 +11,7 @@ class ExtendedSimpleCommand extends SimpleCommand
 	protected $pre_tokens = array(), $post_tokens = array(), $global_tokens = array();
 	
 	//Proxies
-    protected $user_proxy, $template_proxy;
+    protected $films_proxy, $user_proxy, $template_proxy;
     
 	//Error vals
 	public $error_vals = array( 'There was an error', 'You must fill in the required fields (*)' ), $actions;
@@ -50,6 +50,7 @@ class ExtendedSimpleCommand extends SimpleCommand
 		$this->bc_links = array();
         
         //Proxies
+        $this->films_proxy = $this->facade->retrieveProxy(FilmsProxy::NAME);
         $this->user_proxy = $this->facade->retrieveProxy(UserProxy::NAME);
         $this->template_proxy = $this->facade->retrieveProxy(TemplateProxy::NAME);
 		

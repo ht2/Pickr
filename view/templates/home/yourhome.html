@@ -22,6 +22,46 @@
     </div>
 </div>
 
-<h2>Your Votes</h2>
-<p>Check out which films you have voted for on the <a href='/films#browse'>Films</a> page.</p>
-<div id='your_films' class='shadowbox'>{YOUR_FILMS}</div>
+<h2>Suggestions</h2>
+<div id='suggestions' class='cf'></div>
+
+<script type='text/javascript'>
+$(document).ready( homeInit );    
+
+function homeInit(){
+    loadSuggestions( 8, false, null );
+    initRatings();
+}
+
+function loadSuggestions( count, append, widget ){
+    var existing = new Array();
+    $('#suggestions .suggestion').each( function(i){
+        existing.push( $(this).data('imdbid') );
+    });
+    
+    $.post(
+        '/ajax/suggestions',  
+        {count:count, existing:existing},  
+        function(data) {             
+            
+            
+            
+            if( widget != null ){
+                widget.closest('.suggestion').fadeOut('1000', function(){ 
+                if( append )
+                    $('#suggestions').append( data.html );
+                else
+                    $('#suggestions').html( data.html );
+                });
+            } else {
+                if( append )
+                    $('#suggestions').append( data.html );
+                else
+                    $('#suggestions').html( data.html );
+            }
+        },  
+        'json'  
+    );
+}
+
+</script>

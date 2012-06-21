@@ -23,6 +23,10 @@ class AjaxCommand extends ExtendedSimpleCommand
             case "vote":
                 $this->doVote();
                 break;
+            
+            case "suggestions":
+                $this->getSuggestions();
+                break;
         }
 		
 		$this->printJSON();
@@ -56,6 +60,7 @@ class AjaxCommand extends ExtendedSimpleCommand
                 $tokens =  $this->facade->retrieveProxy( FilmsProxy::NAME)->tokens( $film );
                 $vote = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVote( $this->session->user_id, $film->f_id );                
                 $tokens['{VOTE_INFO}'] = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVoteWidget( $vote, $film );
+                
                 $html = $this->loadTemplate('films/film_info.html');            
                 $html = $this->template->tokenize($tokens, $html);
                 
@@ -80,6 +85,31 @@ class AjaxCommand extends ExtendedSimpleCommand
         } else {
             $this->json['rating'] = $rating;
             $this->json['html'] = $html;
+        }
+    }
+
+    public function getSuggestions() {
+        $count = $this->checkPost('count', 1, 2);
+        $existing = $this->checkPost('existing', array(), 4);
+        $films = $this->films_proxy->getSuggestions( $this->session->user_id, $count, $existing );
+        
+        if( sizeof($films)==0)
+        {
+            $this->json['total'] = 0;
+            $this->json['html'] = "";
+        } else {
+            $suggestions = array();
+            $suggestion_template = $this->loadTemplate('home/suggestion.phtml');
+            foreach( $films as $f ){
+                $tokens = $this->films_proxy->tokens($f);
+                $vote = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVote( $this->session->user_id, $f->f_id );                
+                $tokens['{VOTE_INFO}'] = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVoteWidget( $vote, $f );
+                
+                $suggestions[] = $this->template->tokenize($tokens, $suggestion_template);
+            }
+            
+            $this->json['total'] = sizeof($films);
+            $this->json['html'] = implode('', $suggestions);
         }
     }
 }

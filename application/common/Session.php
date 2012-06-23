@@ -21,6 +21,7 @@ class Session
 		$_SESSION['email'] = $user->email;
 		$_SESSION['fname'] = $user->fname;
 		$_SESSION['lname'] = $user->lname;
+		$_SESSION['admin'] = ( intval($user->admin)==1 );
 		$_SESSION['user_name'] = $user->fname." ".$user->lname;
 		$_SESSION['user_session'] = md5( $_SESSION['user_id'].session_id().$this->theSite );		
 	}

@@ -46,7 +46,15 @@ class FilmsProxy extends Proxy
                 
         $genres = $this->genreList( $film->genres );
         
+        if( $this->session->admin ){
+            $film_admin = "<h4>Admin</h4>";
+            $film_admin.= para( easylink( "Delete this film", "/films/view/{F_IMDB_ID}", "", "", 'onclick="return confirm(\'This will remove this film and all votes.\');"') );
+        } else {
+            $film_admin = "";
+        }
+        
         return array(
+            '{F_ADMIN}'     =>  $film_admin,
             '{F_IMDB_ID}'   =>  $film->imdbID,
             '{F_TITLE}'     =>  $film->title,
             '{F_YEAR}'      =>  $film->year,

@@ -42,6 +42,7 @@ class ExtendedSimpleCommand extends SimpleCommand
 		$this->inits 		= '';
 		$this->addInclude('jquery');
 		$this->addInclude('datatables');
+		$this->addInclude('lightbox');
                 
 		$this->module		= "";
 		$this->logout_link	= constructURL("/login", array( "command"=>"logout") );		

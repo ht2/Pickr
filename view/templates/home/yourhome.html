@@ -42,10 +42,7 @@ function loadSuggestions( count, append, widget ){
     $.post(
         '/ajax/suggestions',  
         {count:count, existing:existing},  
-        function(data) {             
-            
-            
-            
+        function(data) {  
             if( widget != null ){
                 widget.closest('.suggestion').fadeOut('1000', function(){ 
                 if( append )
@@ -59,6 +56,8 @@ function loadSuggestions( count, append, widget ){
                 else
                     $('#suggestions').html( data.html );
             }
+            
+            initLightbox();
         },  
         'json'  
     );

@@ -3,11 +3,11 @@
         <table width="100%">
             <tr>
                 <td>
-                    <img src="http://www.pickr.com/thumb.php?file={F_IMAGE}&sizex=100&sizey=80" alt='{F_TITLE} Poster' border="0" style='margin-right:10px;'/>
+                    <a class='lightbox' href='http://www.pickr.com/thumb.php?file={F_IMAGE}&size=600' title='{F_TITLE}'><img src="http://www.pickr.com/thumb.php?file={F_IMAGE}&sizex=80&sizey=60" alt='{F_TITLE} Poster' border="0" style='margin-right:10px;'/></a>
                 </td>
-                <td>
+                <td align='center'>
                     <h4>{F_TITLE}</h4>
-                    <p class='center'>{VOTE_INFO}</p>
+                    {VOTE_INFO}
                 </td>
             </tr>
         </table>

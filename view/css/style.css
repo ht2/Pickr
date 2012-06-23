@@ -244,3 +244,7 @@ input[type=button]{
 .ratings_vote {  
     background: url('../images/star_full.png') center center no-repeat;  
 }  
+
+.suggestion{
+    min-height: 70px;
+}

@@ -1,4 +1,5 @@
-function initRatings(){    
+function initRatings(){  
+    
     $('.ratings_stars').live('mouseover', function() {  
         $(this).prevAll().andSelf().addClass('ratings_over');  
         $(this).nextAll().removeClass('ratings_vote');  
@@ -37,7 +38,9 @@ function initRatings(){
             },  
             'json'  
         );
-    });  
+    });    
+    
+    setAllVotes();
 }
 
 function setAllVotes(){

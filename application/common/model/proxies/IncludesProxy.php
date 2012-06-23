@@ -43,6 +43,12 @@ class IncludesProxy extends Proxy
 				$output .= $this->includeCSS( 'jquery.dataTables_themeroller.css', '/view/packages/DataTables-1.9.1/media/css/' );
 				$output .= $this->includeJS( '/view/packages/DataTables-1.9.1/media/js/dataTables.init.js' );
             break;
+        
+			case "lightbox":
+				$output .= $this->includeJS( '/view/packages/jquery-lightbox-0.5/js/jquery.lightbox-0.5.min.js' );
+				$output .= $this->includeCSS( 'jquery.lightbox-0.5.css', '/view/packages/jquery-lightbox-0.5/css/' );
+				$output .= $this->includeJS( '/view/packages/jquery-lightbox-0.5/js/lightbox.init.js' );
+            break;
 				
 		}
 		return $output;

@@ -8,7 +8,7 @@ class FilmsCommand extends ExtendedSimpleCommand
 		$this->module = "films";
         
         $this->addInclude('validate');
-        $this->inits .= $this->facade->retrieveProxy(IncludesProxy::NAME )->includeJS('view/templates/films/js/rating.js');
+        $this->inits .= $this->facade->retrieveProxy(IncludesProxy::NAME )->includeJS('/view/templates/films/js/rating.js');
         
         switch( $this->command ){
             default:
@@ -34,7 +34,10 @@ class FilmsCommand extends ExtendedSimpleCommand
         ));
         
         
-        $film_tokens = $this->facade->retrieveProxy(FilmsProxy::NAME )->tokens( $film );
+        $film_tokens = $this->facade->retrieveProxy(FilmsProxy::NAME )->tokens( $film );        
+        $vote = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVote( $this->session->user_id, $film->f_id );                
+        $film_tokens['{VOTE_INFO}'] = $this->facade->retrieveProxy( FilmsProxy::NAME)->getVoteWidget( $vote, $film );
+        
         $this->addPostTokens( $film_tokens );
     }
 

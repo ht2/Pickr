@@ -16,13 +16,21 @@ class MySQL
     {
         switch( $_SERVER['SERVER_NAME'] )
         {
-                default:
-                case "localhost":
-                        $this->host 	= "localhost";
-                        $this->database = "pickr";
-                        $this->user 	= "root";
-                        $this->pass 	= "";
-                        $this->site_root = "http://www.pickr.com";
+            default:
+            case "localhost":
+                $this->host 	= "localhost";
+                $this->database = "pickr";
+                $this->user 	= "root";
+                $this->pass 	= "";
+                $this->site_root = "http://www.pickr.com";
+            break;
+            
+            case "pickr.ht2.co.uk":
+                $this->host 	= "localhost";
+                $this->database = "pickr";
+                $this->user 	= "root";
+                $this->pass 	= "";
+                $this->site_root = "http://pickr.ht2.co.uk";
                 break;
         }
 
@@ -109,7 +117,7 @@ class MySQL
         foreach( $data as $field => $value ) 
         {
             $fields[] = '`' . $field . '`';
-            $values[] = "'" . mysql_real_escape_string($value) . "'";
+            $values[] = "'" . $this->mysqli->real_escape_string($value) . "'";
         }
         $field_list = join( ',', $fields );
         $value_list = join( ', ', $values );
@@ -121,7 +129,7 @@ class MySQL
 
     public function update($table, $data, $id_field, $id_value) 
     {
-        foreach ($data as $field => $value) $fields[] = sprintf("`%s` = '%s'", $field, mysql_real_escape_string($value));
+        foreach ($data as $field => $value) $fields[] = sprintf("`%s` = '%s'", $field, $this->mysqli->real_escape_string($value));
         $field_list = join(',', $fields);
         $query = sprintf("UPDATE `%s` SET %s WHERE `%s` = %s", $table, $field_list, $id_field, intval($id_value));
         $this->query( $query );
@@ -148,7 +156,7 @@ class MySQL
 
     public function safe($value)
     {
-        return mysql_real_escape_string($value);
+        return $this->mysqli->real_escape_string($value);
     }
 	
 }
